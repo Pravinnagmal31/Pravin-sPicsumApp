@@ -24,7 +24,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String URL = "https://picsum.photos/";
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
 
