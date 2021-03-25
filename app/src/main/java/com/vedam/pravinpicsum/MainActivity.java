@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
 
+    ProgressDialog progressDialog;
+
     List<Pics> picsList = new ArrayList<>();
     
     @Override
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        progressDialog = new ProgressDialog(this);
 
         restoreInstance(savedInstanceState);
 
@@ -73,16 +77,20 @@ public class MainActivity extends AppCompatActivity {
 
     void loadDataRetroFit(){
 
+        progressDialog.setMessage("Loading Data...");
+        progressDialog.show();
+
         Call<List<Pics>> call =  APIClient.getApiClient().getPosts();
 
         call.enqueue(new Callback<List<Pics>>() {
             @Override
             public void onResponse(Call<List<Pics>> call, retrofit2.Response<List<Pics>> response) {
 
+                progressDialog.dismiss();
+
                 picsList = response.body();
 
                 if(response.body().size()!=0){
-
                     recyclerAdapter = new RecyclerAdapter(MainActivity.this,picsList);
                     recyclerView.setAdapter(recyclerAdapter);
                 }
